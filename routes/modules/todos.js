@@ -8,12 +8,12 @@ router.get('/new', (req, res) => {
   res.render('new')
 })
 
-router.post('/todos', (req, res) => {
+router.post('/', (req, res) => {
   const name = req.body.name
   return Todo.create({
     name,
     isDone: false,
-    UserId: 3 //temporary
+    UserId: req.user.id
   })
     .then(() => res.redirect('/'))
     .catch(error => console.log(error))

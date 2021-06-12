@@ -1,5 +1,6 @@
 const express = require('express')
 const passport = require('passport')
+const bcrypt = require('bcryptjs')
 const router = express.Router()
 
 const db = require('../../models')
@@ -44,7 +45,8 @@ router.post('/register', (req, res) => {
 })
 
 router.get('/logout', (req, res) => {
-  res.send('logout')
+  req.logout()
+  res.redirect('/users/login')
 })
 
 module.exports = router
