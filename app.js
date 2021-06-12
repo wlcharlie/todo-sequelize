@@ -35,10 +35,51 @@ app.get('/', (req, res) => {
     .catch(err => res.status(422).json(err))
 })
 
+app.get('/todos/new', (req, res) => {
+  res.render('new')
+})
+
+app.post('/todos', (req, res) => {
+  const name = req.body.name
+  return Todo.create({
+    name,
+    isDone: false,
+    UserId: 3 //temporary
+  })
+    .then(() => res.redirect('/'))
+    .catch(error => console.log(error))
+})
+
 app.get('/todos/:id', (req, res) => {
   const id = req.params.id
   return Todo.findByPk(id)
     .then(todo => res.render('detail', { todo: todo.toJSON() }))
+    .catch(error => console.log(error))
+})
+
+app.get('/todos/:id/edit', (req, res) => {
+  const id = req.params.id
+  return Todo.findByPk(id)
+    .then(todo => res.render('edit', { todo: todo.toJSON() }))
+    .catch(error => console.log(error))
+})
+
+app.put('/todos/:id', (req, res) => {
+  const id = req.params.id
+  const name = req.body.name
+  return Todo.findByPk(id)
+    .then(todo => {
+      todo.name = name
+      todo.save()
+      res.redirect(`/todos/${id}`)
+    })
+    .catch(error => console.log(error))
+})
+
+app.delete('/todos/:id', (req, res) => {
+  const id = req.params.id
+  return Todo.destroy({ where: { id } })
+    .then(() => res.redirect('/'))
     .catch(error => console.log(error))
 })
 
